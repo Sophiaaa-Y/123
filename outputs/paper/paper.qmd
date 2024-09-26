@@ -110,14 +110,20 @@ ggplot(Observations_cleaned_data, aes(x = `Wind speed in km/h`, y = `Wave Action
 
 #### Second Graph ####
 
-# Scatter plot of wind speed vs turbidity
-ggplot(Observations_cleaned_data, aes(x = `Wave Action`, y = `Turbidity of water (NTUs)`)) +
-  geom_point(color = "red", alpha = 0.6) +
-  labs(
-    x = "Wave Action",
-    y = "Turbidity (NTUs)"
-  ) +
-  theme_minimal()
+# Boxplot of wave action vs turbidity
+ggplot(Observations_cleaned_data, aes(x = `Wave Action`, y = log(`Turbidity of water (NTUs)`))) +
+  geom_boxplot(aes(fill = `Wave Action`), color = "black", alpha = 0.7, outlier.shape = 21, 
+               outlier.fill = "red", outlier.size = 3) +
+  scale_fill_brewer(palette = "Set2") + 
+  stat_summary(fun = mean, geom = "point", shape = 23, size = 4, fill = "yellow") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "none", 
+        panel.grid.major = element_line(size = 0.5, linetype = 'dashed', color = "gray"),
+        axis.title.x = element_text(face = "bold"), 
+        axis.title.y = element_text(face = "bold"),
+        axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
+        axis.text.y = element_text(face = "bold")) +
+  labs(x = "Wave Action", y = "Log(Turbidity (NTUs))")
 ```
 
 @fig-waveaction-vs-turbidity illustrates that higher wave actions are associated with large value of turbidity of water. With high wave action, turbidity values have a wide range from near 0 NTUs to over 200 NTUs, indicating that strong waves cause significant disturbances in the water, such as increasing sediment suspension in the water, and finally lead to an increase in the turbidity of water. When wave action is moderate, turbidity levels are relatively more stable, and always gather lower than 100 NTUs. This indicates that moderate wave action causes less disturbances in the water and result in clearer water. But there are some outliers at this wave level when turbidity exceeds 100 NTUs and even exceeds 225 NTUs. When wave action is low, most values of turbidity are gathered around 0 NTUs to 75 NTUs. This shows that although at low wave action level, there are still some sedments are disturbed in the water, with a lower impact compare to high wave action level. And there are some outliers occur when turbidity over 175 NTUs. Besides, when there is no wave action, most of the turbidity values are below 20 NTUs and so close to 0 NTUs, which is expected because there is less movement to disturb sediment in water. And there are some outliers occur when turbidity over 100 NTUs. Some outliers above may caused by some special local environment conditions such as pollutions or human activities. 
@@ -133,13 +139,17 @@ ggplot(Observations_cleaned_data, aes(x = `Wave Action`, y = `Turbidity of water
 #### Third Graph ####
 
 # Scatter plot of turbidity vs waterfowl population
-ggplot(Observations_cleaned_data, aes(x = `Turbidity of water (NTUs)`, y = `Waterfowl population`)) +
-  geom_point(alpha = 0.6, color = "purple") +
-  labs(
-    x = "Turbidity (NTUs)",
-    y = "Waterfowl population"
-  ) +
-  theme_minimal()
+ggplot(Observations_cleaned_data, aes(x = log(`Turbidity of water (NTUs)`), y = `Waterfowl population`)) +
+  geom_point(aes(size = `Waterfowl population`), color = "purple", alpha = 0.6) +
+  geom_smooth(method = "loess", se = FALSE, color = "darkgreen", linetype = "dashed", size = 1.5) +
+  scale_size_continuous(range = c(2, 10)) +  # Adjust the point size range
+  labs(x = "Log(Turbidity (NTUs))", y = "Waterfowl Population") +
+  theme_minimal(base_size = 14) +
+  theme(panel.grid.major = element_line(color = "gray", linetype = "dotted"),
+        axis.title.x = element_text(face = "bold"), 
+        axis.title.y = element_text(face = "bold"),
+        axis.text.x = element_text(face = "bold", size = 12),
+        axis.text.y = element_text(face = "bold", size = 12))
 ```
 
 @fig-turbidity-vs-waterfowlpop illustrates that clearer waters are more benefit to waterfowl activity and higher value of water turbidity causes fewer number of waterfowl. According to the graph, it shows that the majority of waterfowl are observed when turbidity levels are low, particularly when turbidity is below 25 NTUs. As turbidity increases, the number of waterfowl decreases sharply, indicating that waterfowl may prefer clearer water environments where there is less suspended particulate matter. This may because clearer water supports better food resources, feeding conditions and visibility conditions for waterfowl. There are a few number of waterfowl being observed when the turbidity of water exceeds 50 NTUs and even higher. This means that waterfowl population are more likely to avoid living in the environment with high turbidity water. Also, there are some waterfowls are found with turbidity exceeds 150 NTUs, which are called outliers. This may also indicates that although waterfowl can exist in more turbid waters, they are less likely to be found. This may be caused by the impact on visibility, food availability, and overall habitat quality. 
